@@ -1,29 +1,34 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define nl "\n"
-#define ll long long int
-#define INF 1e9
-int search(int n,int a[],int t){
-    int s=0;
-    int e=t-1;
-    
-}
+
 int main() {
-    // your code goes here
-    int n,m;
-    cin>>n>>m;
-    int a[n],b[m];
-    unordered_map<int,int>m;
-    for(int i=0;i<n;i++){
-        cin>>a[i];
-        m[a[i]]++;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    int n, m;
+    cin >> n >> m;
+    multiset<int> prices;
+    int price;
+    for (int i = 0; i < n; i++) {
+        cin >> price;
+        prices.insert(price);
     }
-    for(int i=0;i<m;i++){
-        cin>>b[i];
-    }
-    sort(a,a+n);
-    for(int i=0;i<m;i++){
-        cout<<search(b[i],a,n)<<endl;
+    int max_price;
+    for (int i = 0; i < m; i++) {
+        cin >> max_price;
+        auto it = prices.lower_bound(max_price);
+        if (it == prices.end() || *it > max_price) {
+            if (it == prices.begin()) {
+                cout << "-1\n";
+            } else {
+                it--;
+                cout << *it << "\n";
+                prices.erase(it);
+            }
+        } else {
+            cout << *it << "\n";
+            prices.erase(it);
+        }
     }
     return 0;
 }
