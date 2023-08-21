@@ -14,28 +14,23 @@ using namespace std;
 #define PI 3.1415926535897932384626433832795
 #define INF 1e9
 int main() {
-	// your code goes here
-	ll n,k;
-	cin>>n>>k;
-	vector<ll>v;
-	ll t;
-	for(int i=0;i<n;i++){
-		cin>>t;
-		v.push_back(t);
-	}
-	multiset<ll>m;
-	for(int i=0;i<=n;i++){
-		ll a;
-		int s=m.size()/2;
-		for(auto i:m ){
-			a=i;
-			if(s==0){
-				break;
-			}
-			s--;
-		}
-		cout<<a<<" ";
-		m.erase(m.find(v[i-k]));
-		m.insert(v[i]);
-	}
+    // your code goes here
+    ll n,k;
+    cin>>n>>k;
+    vector<ll>v;
+    ll t;
+    for(int i=0;i<n;i++){
+        cin>>t;
+        v.push_back(t);
+    }
+    multiset<ll>m;
+    for(int i=0;i<k;i++){
+        m.insert(v[i]);
+    }
+    for(int i=k;i<=n;i++){
+        auto mid = next(m.begin(), k/2);
+        cout << (*mid + *prev(mid, 1-k%2)) / 2.0 << " ";
+        m.erase(m.find(v[i-k]));
+        m.insert(v[i]);
+    }
 }

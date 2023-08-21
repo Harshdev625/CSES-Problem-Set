@@ -7,19 +7,13 @@ int main() {
     // your code goes here
     int t;
     cin>>t;
-    ll a,ans=0;
-    unordered_map<int,int>m;
+    int a;
+    set<int>s;
     while(t--){
         cin>>a;
-        if(m[a]==0){
-            ans++;
-            m[a]++;
-        }
-        else{
-            m[a]++;
-        }
+        s.insert(a);
     }
-    cout<<ans;
+    cout<<s.size();
     return 0;
 }
 
