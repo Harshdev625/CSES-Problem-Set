@@ -27,7 +27,7 @@ int main() {
         m[v[i]]=i;
     }
     int round=1;
-    for(int i=1;i<=n;i++){
+    for(int i=1;i<=n;i++){an
         if(m[i]<m[i-1])round++;
     }
     // cout<<round<<nl;
