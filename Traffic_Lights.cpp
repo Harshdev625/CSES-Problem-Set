@@ -58,43 +58,26 @@ vector<ll> primes(){
     return primes;
 }
 
-ll recursion(int x,ll &k,vll &a){
-    if(x>k)return 0;
-    if(x==k)return 1;
-    ll ans=0;
-    for(int i=0;i<a.sz;i++){
-        ans+= (recursion(x+a[i],k,a)%MOD);
-    }
-    return ans%MOD;
-}
-
-ll memoization(int x,ll &k,vll &a,vll &dp){
-    if(x>k)return 0;
-    if(x==k)return 1;
-    if(dp[x]!=-1)return dp[x];
-    ll ans=0;
-    for(int i=0;i<a.sz;i++){
-        ans+= (memoization(x+a[i],k,a,dp)%MOD);
-    }
-    return dp[x]=ans%MOD;
-}
-
 void solve(){
     ll n,k;
     cin>>n>>k;
-    vll a(n);
-    init(a,n);
-    vll dp(k+1,0);
-    dp[0]=1;
-    for(int i=1;i<=k;i++){
-        for(int j=0;j<n;j++){
-            if(i-a[j]>=0){
-                dp[i]=(dp[i]+dp[i-a[j]])%MOD;
-            }
-        }
+    vll v(k);
+    init(v,k);
+    multiset<ll>s,t;
+    s.insert(0);
+    s.insert(n);
+    t.insert(n);
+    for(int i=0;i<k;i++){
+        s.insert(v[i]);
+        auto it = s.find(v[i]);
+        auto it1 = prev(it);
+        auto it2 = next(it);
+        auto it3 =t.find(*it2 -*it1);
+        t.erase(it3);
+        t.insert(v[i]-*it1);
+        t.insert(*it2-v[i]);
+        cout<<*t.rbegin()<<" ";
     }
-    // ll ans= memoization(0,k,a,dp);
-    cout<<dp[k]<<nl;
 }
 
 int main() {

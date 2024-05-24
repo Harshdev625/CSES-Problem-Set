@@ -24,7 +24,7 @@ using namespace std;
 #define min_pq priority_queue<ll, vector<ll>, greater<ll>>
 #define init(a,n) for(ll i=0; i<n; i++) { cin>>a[i]; }
 #define F0R(i, a) for (ll i=0; i<(a); i++)
-#define print(a) for(const auto&i: (a)){cout<<i<<" ";}
+#define print(a) for(const auto&i: (a)){cerr<<i<<" ";}
 
 set <ll> factors(ll n){
     set<ll>s;
@@ -58,43 +58,68 @@ vector<ll> primes(){
     return primes;
 }
 
-ll recursion(int x,ll &k,vll &a){
-    if(x>k)return 0;
-    if(x==k)return 1;
-    ll ans=0;
-    for(int i=0;i<a.sz;i++){
-        ans+= (recursion(x+a[i],k,a)%MOD);
-    }
-    return ans%MOD;
-}
-
-ll memoization(int x,ll &k,vll &a,vll &dp){
-    if(x>k)return 0;
-    if(x==k)return 1;
-    if(dp[x]!=-1)return dp[x];
-    ll ans=0;
-    for(int i=0;i<a.sz;i++){
-        ans+= (memoization(x+a[i],k,a,dp)%MOD);
-    }
-    return dp[x]=ans%MOD;
-}
-
 void solve(){
     ll n,k;
     cin>>n>>k;
     vll a(n);
     init(a,n);
-    vll dp(k+1,0);
-    dp[0]=1;
-    for(int i=1;i<=k;i++){
-        for(int j=0;j<n;j++){
-            if(i-a[j]>=0){
-                dp[i]=(dp[i]+dp[i-a[j]])%MOD;
-            }
+    multiset<ll>b,c;
+    for(int i=0; i<k; i++){
+        if(b.empty() || a[i]<=*b.rbegin()){
+            b.insert(a[i]);
+        }
+        else c.insert(a[i]);
+        while((int)b.sz -(int)c.sz>1){
+            auto it = prev(b.end());
+            c.insert(*it);
+            b.erase(it);
+        }
+        while((int)b.sz -(int)c.sz<0){
+            auto it = c.begin();
+            b.insert(*it);
+            c.erase(it);
+        }
+        while(!c.empty() && *b.rbegin()>*c.begin()){
+            auto it = prev(b.end());
+            c.insert(*it);
+            b.erase(it);
+            it = c.begin();
+            b.insert(*it);
+            c.erase(it);
         }
     }
-    // ll ans= memoization(0,k,a,dp);
-    cout<<dp[k]<<nl;
+    for(int i=k;i<=n;i++){
+        // print(b);cerr<<nl;
+        // print(c);cerr<<nl;
+        cout<<*b.rbegin()<<" ";
+        if(i==n)break;
+        if(b.find(a[i-k])!=b.end()){
+            b.erase(b.find(a[i-k]));
+        }
+        else c.erase(c.find(a[i-k]));
+        if(b.empty() || a[i]<=*b.rbegin()){
+            b.insert(a[i]);
+        }
+        else c.insert(a[i]);
+        while((int)b.sz -(int)c.sz>1){
+            auto it = prev(b.end());
+            c.insert(*it);
+            b.erase(it);
+        }
+        while((int)b.sz -(int)c.sz<0){
+            auto it = c.begin();
+            b.insert(*it);
+            c.erase(it);
+        }
+        while(!c.empty() && *b.rbegin()>*c.begin()){
+            auto it = prev(b.end());
+            c.insert(*it);
+            b.erase(it);
+            it = c.begin();
+            b.insert(*it);
+            c.erase(it);
+        }
+    }
 }
 
 int main() {

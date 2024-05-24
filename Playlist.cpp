@@ -24,32 +24,23 @@ int main() {
     for(int i=0;i<n;i++){
         cin>>v[i];
     }
-    unordered_set<int>m;
-    int count=0;
-    vector<int>list;
+    set<int>m;
+    int ans=0;
+    int l=0;
     for(int i=0;i<n;i++){
         if(m.find(v[i])==m.end()){
-            count++;
             m.insert(v[i]);
         }
         else{
-            // cout<<i<<" "<<count<<nl;
-            list.push_back(count);
-            count=1;
-            m.clear(); 
+            while(m.find(v[i])!=m.end()){
+                m.erase(v[l]);
+                l++;
+            }
             m.insert(v[i]);
         }
+        ans= max(ans,i-l+1);
     }
-
-    list.push_back(count);
-    int ans= *max_element(list.begin(),list.end());
-    ans=max(ans,list[0]+list[list.size()-1]);
-    if (ans > n) {
-        cout << n;
-    } else {
-        cout << ans;
-    }
-    
+    cout<<ans<<nl;
 	return 0;
 }
 

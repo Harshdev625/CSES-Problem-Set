@@ -58,43 +58,24 @@ vector<ll> primes(){
     return primes;
 }
 
-ll recursion(int x,ll &k,vll &a){
-    if(x>k)return 0;
-    if(x==k)return 1;
-    ll ans=0;
-    for(int i=0;i<a.sz;i++){
-        ans+= (recursion(x+a[i],k,a)%MOD);
+void build(ll index,ll l,ll r,vll &v,vll &seg){
+    if(l==r){
+        seg[index]=v[l];
+        return ;
     }
-    return ans%MOD;
+    ll mid = l + (r-l)/2;
+    build(2*index+1,l,mid,v,seg);
+    build(2*index+2,mid+1,r,v,seg);
+    seg[index]=seg[2*index+1]+seg[2*index+2];
 }
 
-ll memoization(int x,ll &k,vll &a,vll &dp){
-    if(x>k)return 0;
-    if(x==k)return 1;
-    if(dp[x]!=-1)return dp[x];
-    ll ans=0;
-    for(int i=0;i<a.sz;i++){
-        ans+= (memoization(x+a[i],k,a,dp)%MOD);
-    }
-    return dp[x]=ans%MOD;
-}
-
-void solve(){
-    ll n,k;
-    cin>>n>>k;
-    vll a(n);
-    init(a,n);
-    vll dp(k+1,0);
-    dp[0]=1;
-    for(int i=1;i<=k;i++){
-        for(int j=0;j<n;j++){
-            if(i-a[j]>=0){
-                dp[i]=(dp[i]+dp[i-a[j]])%MOD;
-            }
-        }
-    }
-    // ll ans= memoization(0,k,a,dp);
-    cout<<dp[k]<<nl;
+ll query(ll index,ll low,ll high,ll l,ll r, vll&seg){
+    if(r<low || l>high)return 0;
+    if(low>=l && r>=high)return seg[index];
+    ll mid = low + (high-low)/2;
+    ll leftsum = query(2*index+1,low,mid,l,r,seg);
+    ll rightsum = query(2*index+2,mid+1,high,l,r,seg);
+    return leftsum+rightsum;
 }
 
 int main() {
@@ -102,6 +83,18 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    solve();
+    ll n, q;
+    cin>>n>>q;
+    vll v(n);
+    init(v,n);
+    vll seg(4*n,0);
+
+    build(0,0,n-1,v,seg);
+
+    ll l,r;
+    for(ll i=1;i<=q;i++){
+        cin>>l>>r;
+        cout<<query(0,0,n-1,l-1,r-1,seg)<<nl;
+    }
     return 0;
 }
