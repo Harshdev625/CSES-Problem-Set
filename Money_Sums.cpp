@@ -58,62 +58,27 @@ vector<ll> primes(){
     return primes;
 }
 
-ll helper(ll i,ll last,ll&n,ll&m,vll &v,vvll &dp){
-    if(i==n)return 1;
-    if(i>0 && v[i]!=0 && abs(v[i]-last)>1)return 0;
-    if(dp[i][last]!=-1)return dp[i][last];
-    ll ans=0;
-    if(v[i]==0){
-        for(ll j=1;j<=m;j++){
-            v[i]=j;
-            if(i>0 && abs(v[i]-last)<=1)ans+= helper(i+1,v[i],n,m,v,dp);
-            else if(i==0)ans+= helper(i+1,v[i],n,m,v,dp);
-            v[i]=0;
-            ans%=MOD;
-        }
-    }
-    else{
-        ans+=helper(i+1,v[i],n,m,v,dp);
-        ans%=MOD;
-    }
-    return dp[i][last]=ans%MOD;
-}
-
 void solve(){
-    ll n,m;
-    cin>>n>>m;
+    ll n;
+    cin>>n;
     vll v(n);
     init(v,n);
-    vvll dp(n+1,vll(m+1,0));
-    
-    if (v[n-1] == 0) {
-        for (ll j = 1; j <= m; ++j) {
-            dp[n-1][j] = 1;
-        }
-    } else {
-        dp[n-1][v[n-1]] = 1;
-    }
-
-    for (ll i = n-2; i >= 0; --i) {
-        for (ll j = 1; j <= m; ++j) {
-            if (v[i] == 0 || v[i] == j) {
-                dp[i][j] = dp[i+1][j];
-                if (j > 1) dp[i][j] = (dp[i][j] + dp[i+1][j-1]) % MOD;
-                if (j < m) dp[i][j] = (dp[i][j] + dp[i+1][j+1]) % MOD;
+    ll sum = accumulate(all(v),0LL);
+    vector<ll>dp(sum+1,0);
+    dp[0]=1;
+    set<ll>s;
+    for(ll i=0;i<n;i++){
+        for(ll j=sum-v[i];j>=0;j--){
+            if(dp[j]){
+                dp[j+v[i]]=1;
+                s.insert(j+v[i]);
             }
         }
+        s.insert(v[i]);
+        dp[v[i]]=1;
     }
-
-    ll result = 0;
-    if (v[0] == 0) {
-        for (ll j = 1; j <= m; ++j) {
-            result = (result + dp[0][j]) % MOD;
-        }
-    } else {
-        result = dp[0][v[0]];
-    }
-
-    cout << result << endl;
+    cout<<s.size()<<nl;
+    print(s);
 }
 
 int main() {
