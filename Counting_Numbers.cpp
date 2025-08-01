@@ -20,20 +20,21 @@ using namespace std;
 #define init(a,n) for(ll i=0; i<n; i++) { cin>>a[i]; }
 #define print(a) for(const auto&i: (a)){cerr<<i<<" ";}cerr<<nl;
 
-ll dp [20][2][2][10];
+ll dp [20][2][2][11];
 
 string oneless(string &s) {
-    for(ll i = s.size()-1;i>=0;i--){
-        if(s[i]=='0')s[i]='9';
+    string res=s;
+    for(ll i = res.size()-1;i>=0;i--){
+        if(res[i]=='0')res[i]='9';
         else {
-            s[i]--;
+            res[i]--;
             break;
         }
     }
-    int start = 0;
-    while (start < s.size() && s[start] == '0') start++;
-    if (start == s.size()) return "0";
-    return s.substr(start);
+    ll start = 0;
+    while (start < res.size() && res[start] == '0') start++;
+    if (start == res.size()) return "0";
+    return res.substr(start);
 }
 
 ll helper (ll i,bool flag ,bool num,ll last,string &s){
